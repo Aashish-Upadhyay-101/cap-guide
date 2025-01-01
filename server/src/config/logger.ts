@@ -1,4 +1,5 @@
 import winston from "winston";
+import { AsyncLocalStorage } from "node:async_hooks";
 
 const logLevels = {
   error: 0,
@@ -10,19 +11,49 @@ const logLevels = {
   silly: 6,
 };
 
-const { timestamp, json, cli } = winston.format;
+export const asyncLocalStorage = new AsyncLocalStorage();
+
+const addHttpContext = winston.format((info) => {
+  const httpContext = asyncLocalStorage.getStore();
+  if (httpContext) {
+    return {
+      ...info,
+      ...httpContext,
+    };
+  }
+  return info;
+});
+
+const {
+  combine,
+  timestamp,
+  json,
+  prettyPrint,
+  errors,
+  splat,
+  simple,
+  colorize,
+} = winston.format;
 
 const logger = winston.createLogger({
-  level: "info",
+  level: process.env.LOG_LEVEL || "info",
   levels: logLevels,
-  format: timestamp(),
+  format: combine(
+    timestamp(),
+    addHttpContext(),
+    json(),
+    prettyPrint(),
+    splat(),
+    errors({ stack: true }),
+  ),
   transports: [
     new winston.transports.Console({
-      format: cli({ all: true }),
+      format: combine(colorize(), simple()),
     }),
     new winston.transports.File({
-      filename: "app.log",
-      format: json(),
+      filename: "./logs/combined.log",
+      maxsize: 5 * 1024 * 1024, // 5 MB
+      maxFiles: 3,
     }),
   ],
 });

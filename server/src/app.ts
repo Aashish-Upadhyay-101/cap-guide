@@ -1,18 +1,19 @@
 import express, { Express } from "express";
-
 import dotenv from "dotenv";
+
 dotenv.config();
 
-import logger from "./config/logger";
+import { httpContextMiddleware } from "./middlewares/httpContext";
 
 const app: Express = express();
 
 // middlewares
+app.use(httpContextMiddleware);
 
 // routers
 
 app.get("/", (req, res) => {
-  res.json({ message: "hello world" });
+  res.status(401).json({ message: "hello world" });
 });
 
 export default app;
