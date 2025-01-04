@@ -7,7 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 import cuid from "@server/utils/cuid";
 
-export const user = pgTable("users", {
+export const users = pgTable("users", {
   id: cuid("id").primaryKey(),
   firstName: varchar("first_name", { length: 35 }).notNull(),
   lastName: varchar("last_name", { length: 35 }).notNull(),
@@ -21,3 +21,5 @@ export const user = pgTable("users", {
     .default(new Date())
     .$onUpdate(() => new Date()),
 });
+
+export default users;
