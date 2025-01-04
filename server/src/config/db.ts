@@ -1,5 +1,6 @@
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
 import { Pool } from "pg";
+import * as schema from "../schema";
 
 const pool = new Pool({
   user: process.env.DATABASE_USER,
@@ -9,4 +10,6 @@ const pool = new Pool({
   port: Number(process.env.DATABASE_PORT),
 });
 
-export const db = drizzle(pool);
+const db = drizzle(pool, { schema });
+
+export default db;
