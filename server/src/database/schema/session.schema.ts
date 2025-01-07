@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { json, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import users from "./user.schema";
 import { relations } from "drizzle-orm";
 
@@ -8,6 +8,7 @@ const sessions = pgTable("sessions", {
   userId: uuid("user_id")
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
+  deviceInfo: json("device_info"),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
