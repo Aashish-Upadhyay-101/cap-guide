@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import accounts from "./account.schema";
+import workspaceUsers from "./workspaceUser.schema";
 
 const users = pgTable(
   "users",
@@ -19,7 +20,6 @@ const users = pgTable(
     email: varchar("email", { length: 255 }).notNull(),
     passwordHash: text("password_hash"),
     avatarUrl: text("avatar_url"),
-    isActive: boolean("is_active").default(false),
     isVerified: boolean("is_verified").default(false),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at")
@@ -31,6 +31,7 @@ const users = pgTable(
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+  workspaceUsers: many(workspaceUsers),
 }));
 
 export default users;

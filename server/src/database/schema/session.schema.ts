@@ -5,8 +5,10 @@ import { relations } from "drizzle-orm";
 const sessions = pgTable("sessions", {
   refreshToken: text("refresh_token").primaryKey(),
   createdAt: timestamp("created_at").defaultNow(),
-  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({

@@ -12,9 +12,11 @@ import { relations } from "drizzle-orm";
 const accounts = pgTable(
   "accounts",
   {
-    userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
-    provider: varchar("provider", { length: 20 }),
-    providerUserId: text("provider_user_id"),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    provider: varchar("provider", { length: 20 }).notNull(),
+    providerUserId: text("provider_user_id").notNull(),
     accessToken: text("access_token"),
     refreshToken: text("refresh_token"),
     createdAt: timestamp("created_at").defaultNow(),
