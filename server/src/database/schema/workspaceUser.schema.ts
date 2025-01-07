@@ -4,7 +4,7 @@ import { relations } from "drizzle-orm";
 import workspaces from "./workspace.schema";
 
 const workspaceUsers = pgTable(
-  "workspaceUsers",
+  "workspace_users",
   {
     userId: uuid("user_id")
       .references(() => users.id, { onDelete: "cascade" })
