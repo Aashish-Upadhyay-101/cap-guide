@@ -43,7 +43,7 @@ class User {
     ).toString("hex");
   }
 
-  public isPasswordValid(password: string): boolean {
+  public verifyPassword(password: string): boolean {
     const passwordSalt = this.passwordSalt as string;
     const passwordHash = pbkdf2Sync(
       password,
