@@ -1,7 +1,15 @@
-import { pgTable, primaryKey, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  pgEnum,
+  pgTable,
+  primaryKey,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 import users from "./user.schema";
 import { relations } from "drizzle-orm";
 import workspaces from "./workspace.schema";
+
+const userRoleEnum = pgEnum("user_role", ["OWNER", "ADMIN", "MEMBER"]);
 
 const workspaceUsers = pgTable(
   "workspace_users",
@@ -12,6 +20,7 @@ const workspaceUsers = pgTable(
     workspaceId: uuid("workspace_id")
       .references(() => workspaces.id, { onDelete: "cascade" })
       .notNull(),
+    userRole: userRoleEnum().notNull().default("OWNER"),
     joinedAt: timestamp("joined_at").defaultNow().notNull(),
   },
   (workspaceUsers) => [
