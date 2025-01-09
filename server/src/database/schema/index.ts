@@ -5,4 +5,5 @@ export { default as workspace, workspacesRelations } from "./workspace.schema";
 export {
   default as workspaceUser,
   workspaceUsersRelations,
+  userRoleEnum,
 } from "./workspaceUser.schema";

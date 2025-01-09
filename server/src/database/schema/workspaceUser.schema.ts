@@ -9,7 +9,7 @@ import users from "./user.schema";
 import { relations } from "drizzle-orm";
 import workspaces from "./workspace.schema";
 
-const userRoleEnum = pgEnum("user_role", ["OWNER", "ADMIN", "MEMBER"]);
+export const userRoleEnum = pgEnum("user_role", ["OWNER", "ADMIN", "MEMBER"]);
 
 const workspaceUsers = pgTable(
   "workspace_users",
@@ -20,7 +20,7 @@ const workspaceUsers = pgTable(
     workspaceId: uuid("workspace_id")
       .references(() => workspaces.id, { onDelete: "cascade" })
       .notNull(),
-    userRole: userRoleEnum().notNull().default("OWNER"),
+    role: userRoleEnum().notNull().default("OWNER"),
     joinedAt: timestamp("joined_at").defaultNow().notNull(),
   },
   (workspaceUsers) => [

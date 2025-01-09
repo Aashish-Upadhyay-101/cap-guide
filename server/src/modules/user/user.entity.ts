@@ -1,3 +1,5 @@
+import { pbkdf2Sync, randomBytes } from "crypto";
+
 class User {
   constructor(
     private firstName: string,
@@ -7,6 +9,7 @@ class User {
     private id?: string,
     private avatarUrl?: string,
     private isVerified?: boolean,
+    private passwordSalt?: string,
   ) {}
 
   public getId(): string | undefined {
@@ -27,6 +30,30 @@ class User {
 
   public isUserVerified(): boolean | undefined {
     return this.isVerified;
+  }
+
+  public setPassword(password: string): void {
+    this.passwordSalt = randomBytes(16).toString("hex");
+    this.passwordHash = pbkdf2Sync(
+      password,
+      this.passwordSalt,
+      1000,
+      64,
+      "sha512",
+    ).toString("hex");
+  }
+
+  public isPasswordValid(password: string): boolean {
+    const passwordSalt = this.passwordSalt as string;
+    const passwordHash = pbkdf2Sync(
+      password,
+      passwordSalt,
+      1000,
+      64,
+      "sha512",
+    ).toString("hex");
+
+    return this.passwordHash === passwordHash;
   }
 }
 

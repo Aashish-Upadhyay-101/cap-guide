@@ -19,6 +19,7 @@ const users = pgTable(
     lastName: varchar("last_name", { length: 35 }).notNull(),
     email: varchar("email", { length: 255 }).notNull(),
     passwordHash: text("password_hash"),
+    passwordSalt: text("password_salt"),
     avatarUrl: text("avatar_url"),
     isVerified: boolean("is_verified").default(false),
     createdAt: timestamp("created_at").defaultNow(),
