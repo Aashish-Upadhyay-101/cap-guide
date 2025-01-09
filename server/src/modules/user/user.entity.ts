@@ -5,8 +5,8 @@ class User {
     private firstName: string,
     private lastName: string,
     private email: string,
-    private passwordHash: string,
     private id?: string,
+    private passwordHash?: string,
     private avatarUrl?: string,
     private isVerified?: boolean,
     private passwordSalt?: string,
@@ -51,7 +51,7 @@ class User {
     ).toString("hex");
   }
 
-  public getPasswordHash(): string {
+  public getPasswordHash(): string | undefined {
     return this.passwordHash;
   }
 
