@@ -67,6 +67,16 @@ class User {
 
     return this.passwordHash === passwordHash;
   }
+
+  public toJson() {
+    return {
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      avatarUrl: this.avatarUrl,
+    };
+  }
 }
 
 export default User;

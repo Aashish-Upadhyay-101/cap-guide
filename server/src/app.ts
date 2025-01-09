@@ -9,6 +9,7 @@ import AuthRouter from "./modules/auth/auth.router";
 const app: Express = express();
 
 // middlewares
+app.use(express.json());
 app.use(httpContextMiddleware);
 
 // routers
