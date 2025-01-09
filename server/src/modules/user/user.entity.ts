@@ -16,6 +16,14 @@ class User {
     return this.id;
   }
 
+  public getFirstName(): string {
+    return this.firstName;
+  }
+
+  public getLastName(): string {
+    return this.lastName;
+  }
+
   public getFullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
@@ -41,6 +49,10 @@ class User {
       64,
       "sha512",
     ).toString("hex");
+  }
+
+  public getPasswordHash(): string {
+    return this.passwordHash;
   }
 
   public verifyPassword(password: string): boolean {
