@@ -79,6 +79,7 @@ class User {
       lastName: this.lastName,
       email: this.email,
       avatarUrl: this.avatarUrl,
+      isVerified: this.isVerified,
     };
   }
 }
