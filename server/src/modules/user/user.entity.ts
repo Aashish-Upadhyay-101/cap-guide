@@ -55,6 +55,10 @@ class User {
     return this.passwordHash;
   }
 
+  public getPasswordSalt(): string | undefined {
+    return this.passwordSalt;
+  }
+
   public verifyPassword(password: string): boolean {
     const passwordSalt = this.passwordSalt as string;
     const passwordHash = pbkdf2Sync(
@@ -68,7 +72,7 @@ class User {
     return this.passwordHash === passwordHash;
   }
 
-  public toJson() {
+  public toDTO() {
     return {
       id: this.id,
       firstName: this.firstName,

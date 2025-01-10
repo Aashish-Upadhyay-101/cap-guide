@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
-import db from "@server/config/db";
 import User from "./user.entity";
-import users from "@server/database/schema/user.schema";
+import db from "../../config/db";
+import users from "../../database/schema/user.schema";
 
 interface IUserRepository {
   createUser(user: User): Promise<User>;
@@ -20,6 +20,7 @@ class UserRepository implements IUserRepository {
       lastName: newUser.getLastName(),
       email: newUser.getEmail(),
       passwordHash: newUser.getPasswordHash(),
+      passwordSalt: newUser.getPasswordSalt(),
     });
     return newUser;
   }

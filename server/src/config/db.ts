@@ -1,12 +1,10 @@
 import { drizzle } from "drizzle-orm/postgres-js";
-import { Pool } from "pg";
+import postgres from "postgres";
 import * as schema from "../database/schema";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+const queryClient = postgres(process.env.DATABASE_URL!);
 
-const db = drizzle(pool, {
+const db = drizzle(queryClient, {
   schema,
   logger: true,
 });
