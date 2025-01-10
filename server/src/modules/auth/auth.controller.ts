@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import AuthService from "./auth.service";
 import { ZRegisterUserSchema } from "../user/user.dto";
-import { validateSchema } from "../../utils/validate-schema";
-import logger from "../../config/logger";
+import { catchAsyncError } from "../../utils/catch-async-error";
 
 // TODO: remove password salt from the password and attached the password salt value in the password itself
 
@@ -13,10 +12,10 @@ class AuthController {
     this.authService = authService;
   }
 
-  public registerUser = async (req: Request, res: Response) => {
-    try {
+  public registerUser = catchAsyncError(
+    async (req: Request, res: Response) => {
       const data = req.body;
-      const registerUserDTO = validateSchema(ZRegisterUserSchema, data);
+      const registerUserDTO = ZRegisterUserSchema.parse(data);
 
       const user = await this.authService.registerUser(registerUserDTO);
 
@@ -24,14 +23,8 @@ class AuthController {
         message: "SUCCESS",
         data: user.toDTO(),
       });
-    } catch (error) {
-      logger.error("Error: ", (error as Error).message);
-      res.json({
-        message: "FAILED",
-        error: error,
-      });
-    }
-  };
+    },
+  );
 }
 
 export default AuthController;

@@ -5,6 +5,7 @@ dotenv.config();
 
 import { httpContextMiddleware } from "./middlewares/httpContext";
 import AuthRouter from "./modules/auth/auth.router";
+import globalErrorHandler from "./middlewares/globalErrorHandler";
 
 const app: Express = express();
 
@@ -17,8 +18,7 @@ const authRouter = new AuthRouter();
 
 app.use(authRouter.getRoutes());
 
-app.get("/", (req, res) => {
-  res.status(401).json({ message: "hello world" });
-});
+// global error handler
+app.use(globalErrorHandler);
 
 export default app;
