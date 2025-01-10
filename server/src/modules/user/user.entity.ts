@@ -1,4 +1,5 @@
 import { pbkdf2Sync, randomBytes } from "crypto";
+import { UserDTO } from "./user.dto";
 
 class User {
   constructor(
@@ -68,7 +69,7 @@ class User {
     return this.passwordHash === passwordHash;
   }
 
-  public toDTO() {
+  public toDTO(): UserDTO {
     return {
       id: this.id,
       firstName: this.firstName,

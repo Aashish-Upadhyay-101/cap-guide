@@ -3,6 +3,10 @@ import { RegisterUserDTO } from "../user/user.dto";
 import User from "../user/user.entity";
 import UserRepository from "../user/user.repository";
 
+// TODO: updated_at column is showing incorrect values
+
+// TODO: register user incomplete -> jwt token setup
+
 class AuthService {
   private userRepository: UserRepository;
 
