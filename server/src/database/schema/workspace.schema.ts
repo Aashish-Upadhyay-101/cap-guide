@@ -9,8 +9,8 @@ const workspaces = pgTable("workspaces", {
   name: varchar("name", { length: 35 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at")
-    .default(new Date())
-    .$onUpdate(() => new Date()),
+    .$defaultFn(() => new Date())
+    .$onUpdateFn(() => new Date()),
 
   // note: everything will be scoped within teams and not user
 });

@@ -25,8 +25,8 @@ const users = pgTable(
     isVerified: boolean("is_verified").default(false),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at")
-      .default(new Date())
-      .$onUpdate(() => new Date()),
+      .$defaultFn(() => new Date())
+      .$onUpdateFn(() => new Date()),
   },
   (users) => [uniqueIndex("email_idx").on(users.email)],
 );
