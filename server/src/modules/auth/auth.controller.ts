@@ -4,6 +4,8 @@ import { ZRegisterUserSchema } from "../user/user.dto";
 import { validateSchema } from "../../utils/validate-schema";
 import logger from "../../config/logger";
 
+// TODO: remove password salt from the password and attached the password salt value in the password itself
+
 class AuthController {
   private authService: AuthService;
 
@@ -24,7 +26,7 @@ class AuthController {
       });
     } catch (error) {
       logger.error("Error: ", (error as Error).message);
-      return res.json({
+      res.json({
         message: "FAILED",
         error: error,
       });

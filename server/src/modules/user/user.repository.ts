@@ -3,6 +3,7 @@ import User from "./user.entity";
 import db from "../../config/db";
 import users from "../../database/schema/user.schema";
 
+//
 interface IUserRepository {
   createUser(user: User): Promise<User>;
   getUserByEmail(email: string): Promise<User | null>;
