@@ -16,13 +16,18 @@ interface IUserRepository {
 
 class UserRepository implements IUserRepository {
   public async createUser(newUser: User): Promise<User> {
-    await db.insert(users).values({
-      firstName: newUser.getFirstName(),
-      lastName: newUser.getLastName(),
-      email: newUser.getEmail(),
-      passwordHash: newUser.getPasswordHash(),
-    });
-    return newUser;
+    const user = await db
+      .insert(users)
+      .values({
+        firstName: newUser.getFirstName(),
+        lastName: newUser.getLastName(),
+        email: newUser.getEmail(),
+        passwordHash: newUser.getPasswordHash(),
+      })
+      .returning()
+      .then((row) => row[0]);
+
+    return new User(user.firstName, user.lastName, user.email, user.id);
   }
 
   public async getUserByEmail(email: string): Promise<User | null> {
@@ -37,8 +42,7 @@ class UserRepository implements IUserRepository {
 
     const { id, firstName, lastName, email: mail } = existingUser;
 
-    const user = new User(firstName, lastName, mail, id);
-    return user;
+    return new User(firstName, lastName, mail, id);
   }
 }
 

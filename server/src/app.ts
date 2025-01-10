@@ -16,7 +16,7 @@ app.use(httpContextMiddleware);
 // routers
 const authRouter = new AuthRouter();
 
-app.use(authRouter.getRoutes());
+app.use("/api/v1/auth", authRouter.getRoutes());
 
 // global error handler
 app.use(globalErrorHandler);
