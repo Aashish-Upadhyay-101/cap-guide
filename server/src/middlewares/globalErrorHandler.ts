@@ -43,9 +43,7 @@ const globalErrorHandler = (
       },
     };
     res.status(400).json(errorResponse);
-  }
-
-  if (err instanceof AppError) {
+  } else if (err instanceof AppError) {
     errorResponse = {
       success: false,
       error: {
@@ -54,6 +52,8 @@ const globalErrorHandler = (
       },
     };
     res.status(err.statusCode).json(errorResponse);
+  } else {
+    res.status(500).json(errorResponse);
   }
 };
 

@@ -3,8 +3,6 @@ import AuthService from "./auth.service";
 import { ZRegisterUserSchema } from "../user/user.dto";
 import { catchAsyncError } from "../../utils/catch-async-error";
 
-// TODO: remove password salt from the password and attached the password salt value in the password itself
-
 class AuthController {
   private authService: AuthService;
 

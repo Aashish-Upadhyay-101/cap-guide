@@ -9,7 +9,6 @@ class User {
     private passwordHash?: string,
     private avatarUrl?: string,
     private isVerified?: boolean,
-    private passwordSalt?: string,
   ) {}
 
   public getId(): string | undefined {
@@ -41,26 +40,23 @@ class User {
   }
 
   public setPassword(password: string): void {
-    this.passwordSalt = randomBytes(16).toString("hex");
-    this.passwordHash = pbkdf2Sync(
+    const passwordSalt = randomBytes(16).toString("hex");
+    const passwordHash = pbkdf2Sync(
       password,
-      this.passwordSalt,
+      passwordSalt,
       1000,
       64,
       "sha512",
     ).toString("hex");
+    this.passwordHash = `${passwordSalt}-${passwordHash}`;
   }
 
   public getPasswordHash(): string | undefined {
     return this.passwordHash;
   }
 
-  public getPasswordSalt(): string | undefined {
-    return this.passwordSalt;
-  }
-
   public verifyPassword(password: string): boolean {
-    const passwordSalt = this.passwordSalt as string;
+    const passwordSalt = this.passwordHash?.split("-")[0] as string;
     const passwordHash = pbkdf2Sync(
       password,
       passwordSalt,

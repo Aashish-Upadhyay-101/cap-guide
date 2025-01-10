@@ -21,7 +21,6 @@ class UserRepository implements IUserRepository {
       lastName: newUser.getLastName(),
       email: newUser.getEmail(),
       passwordHash: newUser.getPasswordHash(),
-      passwordSalt: newUser.getPasswordSalt(),
     });
     return newUser;
   }
@@ -31,11 +30,13 @@ class UserRepository implements IUserRepository {
       .select()
       .from(users)
       .where(eq(users.email, email))
-      .limit(1);
+      .limit(1)
+      .then((row) => row[0]);
 
-    if (existingUser.length === 0) return null;
+    if (!existingUser) return null;
 
-    const { id, firstName, lastName, email: mail } = existingUser[0];
+    const { id, firstName, lastName, email: mail } = existingUser;
+
     const user = new User(firstName, lastName, mail, id);
     return user;
   }
