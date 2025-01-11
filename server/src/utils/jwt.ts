@@ -34,6 +34,10 @@ class JWT {
       throw new TokenError(error.message);
     }
   }
+
+  public decodeToken(token: string): JwtPayload | null {
+    return jwt.decode(token) as JwtPayload | null;
+  }
 }
 
 export default JWT;
