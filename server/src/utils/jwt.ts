@@ -1,4 +1,5 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import { TokenError } from "./app-errors";
 
 class JWT {
   private readonly secretKey: string;
@@ -23,7 +24,16 @@ class JWT {
     return token;
   }
 
-  public verifyToken<T extends JwtPayload>(token: string): T {}
+  public verifyToken<T extends JwtPayload>(token: string): T {
+    try {
+      const decoded = jwt.verify(token, this.secretKey, {
+        issuer: this.issuer,
+      });
+      return decoded as T;
+    } catch (error) {
+      throw new TokenError(error.message);
+    }
+  }
 }
 
 export default JWT;

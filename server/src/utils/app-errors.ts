@@ -7,3 +7,10 @@ export class AppError extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 }
+
+export class TokenError extends AppError {
+  constructor(message: string) {
+    super(400, message);
+    this.name = "TokenError";
+  }
+}
