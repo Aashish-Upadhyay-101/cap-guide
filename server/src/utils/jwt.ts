@@ -1,4 +1,4 @@
-import { JwtPayload, SignOptions } from "jsonwebtoken";
+import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 
 class JWT {
   private readonly secretKey: string;
@@ -14,7 +14,14 @@ class JWT {
   public generateToken(
     payload: Record<string, unknown>,
     options?: SignOptions,
-  ): string {}
+  ): string {
+    const token = jwt.sign(payload, this.secretKey, {
+      issuer: this.issuer,
+      expiresIn: this.expiresIn,
+      ...options,
+    });
+    return token;
+  }
 
   public verifyToken<T extends JwtPayload>(token: string): T {}
 }
