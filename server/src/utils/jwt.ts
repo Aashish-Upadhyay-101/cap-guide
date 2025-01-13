@@ -3,12 +3,10 @@ import { TokenError } from "./app-errors";
 
 class JWT {
   private readonly secretKey: string;
-  private readonly expiresIn: string;
   private readonly issuer: string;
 
-  constructor(secretKey: string, expiresIn: string, issuer: string) {
+  constructor(secretKey: string, issuer: string) {
     this.secretKey = secretKey;
-    this.expiresIn = expiresIn;
     this.issuer = issuer;
   }
 
@@ -18,7 +16,6 @@ class JWT {
   ): string {
     const token = jwt.sign(payload, this.secretKey, {
       issuer: this.issuer,
-      expiresIn: this.expiresIn,
       ...options,
     });
     return token;

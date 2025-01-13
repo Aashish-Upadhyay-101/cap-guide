@@ -44,6 +44,10 @@ const globalErrorHandler = (
     };
     res.status(400).json(errorResponse);
   } else if (err instanceof AppError) {
+    logger.error(err.name, {
+      messages: [err.message],
+    });
+
     errorResponse = {
       success: false,
       error: {
