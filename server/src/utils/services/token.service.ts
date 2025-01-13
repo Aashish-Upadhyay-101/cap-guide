@@ -1,5 +1,6 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 import { TokenError } from "../app-errors";
+import { Request } from "express";
 
 export interface CustomJwtPayload {
   userId: string;
@@ -14,15 +15,16 @@ class TokenService {
     this.issuer = issuer;
   }
 
-  public generateToken(
-    payload: Record<string, unknown>,
-    options?: SignOptions,
-  ): string {
-    const token = jwt.sign(payload, this.secretKey, {
-      issuer: this.issuer,
-      ...options,
+  public generateAccessToken(payload: CustomJwtPayload) {
+    return this.generateToken(payload, {
+      expiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES),
     });
-    return token;
+  }
+
+  public generateRefreshToken(payload: CustomJwtPayload) {
+    return this.generateToken(payload, {
+      expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES,
+    });
   }
 
   public verifyToken<T extends JwtPayload>(token: string): T {
@@ -41,6 +43,17 @@ class TokenService {
 
   public decodeToken(token: string): JwtPayload | null {
     return jwt.decode(token) as JwtPayload | null;
+  }
+
+  private generateToken(
+    payload: CustomJwtPayload,
+    options?: SignOptions,
+  ): string {
+    const token = jwt.sign(payload, this.secretKey, {
+      issuer: this.issuer,
+      ...options,
+    });
+    return token;
   }
 }
 

@@ -4,6 +4,7 @@ import { ZLoginUserSchema, ZRegisterUserSchema } from "../user/user.dto";
 import { catchAsyncError } from "../../utils/catch-async-error";
 import { clearCookies, setCookies } from "../../utils/cookie";
 import logger from "../../config/logger";
+import { AppError } from "../../utils/app-errors";
 
 class AuthController {
   private authService: AuthService;
@@ -64,11 +65,35 @@ class AuthController {
     });
   });
 
-  public resetPassword = catchAsyncError(
-    async (req: Request, res: Response) => {},
-  );
+  public tokenRefresh = catchAsyncError(async (req: Request, res: Response) => {
+    let token;
+    if (req.body.refreshToken) {
+      token = req.body.refreshToken;
+    } else if (req.query.refreshToken) {
+      token = req.query.refreshToken;
+    } else if (req.cookies && req.cookies.refreshToken) {
+      token = req.cookies.refreshToken;
+    }
 
-  public tokenRefresh = catchAsyncError(
+    if (!token) {
+      throw new AppError(401, "User must be logged in to perform this action");
+    }
+
+    const tokenPair = this.authService.tokenRefresh(token);
+
+    setCookies(res, "accessToken", tokenPair.accessToken);
+    setCookies(res, "refreshToken", tokenPair.refreshToken);
+
+    logger.info("Token refreshed successfully");
+
+    res.status(201).json({
+      message: "SUCCESS",
+      data: tokenPair,
+    });
+  });
+
+  // TODO: featuers that will be added at last
+  public resetPassword = catchAsyncError(
     async (req: Request, res: Response) => {},
   );
 

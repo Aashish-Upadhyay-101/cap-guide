@@ -1,6 +1,8 @@
 import { TokenPair } from "../../types";
 import { AppError } from "../../utils/app-errors";
-import TokenService from "../../utils/services/token.service";
+import TokenService, {
+  CustomJwtPayload,
+} from "../../utils/services/token.service";
 import PasswordService from "../../utils/services/password.service";
 import { LoginUserDTO, RegisterUserDTO, UserDTO } from "../user/user.dto";
 import UserRepository from "../user/user.repository";
@@ -40,20 +42,12 @@ class AuthService {
     const user = await this.userRepository.createUser(newUser);
 
     const tokenPair: TokenPair = {
-      accessToken: this.tokenService.generateToken(
-        { userId: user.id },
-        {
-          expiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES),
-        },
-      ),
-      refreshToken: this.tokenService.generateToken(
-        {
-          userId: user.id,
-        },
-        {
-          expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES,
-        },
-      ),
+      accessToken: this.tokenService.generateAccessToken({
+        userId: user.id as string,
+      }),
+      refreshToken: this.tokenService.generateRefreshToken({
+        userId: user.id as string,
+      }),
     };
 
     return tokenPair;
@@ -75,23 +69,25 @@ class AuthService {
     }
 
     const tokenPair: TokenPair = {
-      accessToken: this.tokenService.generateToken(
-        { userId: user.id },
-        {
-          expiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES),
-        },
-      ),
-      refreshToken: this.tokenService.generateToken(
-        {
-          userId: user.id,
-        },
-        {
-          expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES,
-        },
-      ),
+      accessToken: this.tokenService.generateAccessToken({
+        userId: user.id as string,
+      }),
+      refreshToken: this.tokenService.generateRefreshToken({
+        userId: user.id as string,
+      }),
     };
 
     return tokenPair;
+  }
+
+  public tokenRefresh(token: string): TokenPair {
+    const decoded = this.tokenService.verifyToken<CustomJwtPayload>(token);
+    return {
+      accessToken: this.tokenService.generateAccessToken({
+        userId: decoded.userId,
+      }),
+      refreshToken: token,
+    };
   }
 }
 
