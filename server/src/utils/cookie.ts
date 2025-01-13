@@ -1,6 +1,11 @@
-import { Response } from "express";
+import { CookieOptions, Response } from "express";
 
-export const setCookies = (res: Response, key: string, value: string) => {
+export const setCookies = (
+  res: Response,
+  key: string,
+  value: string,
+  options?: CookieOptions,
+) => {
   let maxAge = 1000 * 60 * 60 * 24 * 365; // default max age is 1 year
   switch (key) {
     case "accessToken":
@@ -16,5 +21,16 @@ export const setCookies = (res: Response, key: string, value: string) => {
     sameSite: "strict",
     secure: false, // true for production: Only send cookies over HTTPS
     maxAge: maxAge,
+    ...options,
+  });
+};
+
+export const clearCookies = (
+  res: Response,
+  key: string,
+  options?: CookieOptions,
+) => {
+  res.clearCookie(key, {
+    ...options,
   });
 };

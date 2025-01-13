@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import AuthService from "./auth.service";
 import { ZLoginUserSchema, ZRegisterUserSchema } from "../user/user.dto";
 import { catchAsyncError } from "../../utils/catch-async-error";
-import { setCookies } from "../../utils/cookie";
+import { clearCookies, setCookies } from "../../utils/cookie";
 import logger from "../../config/logger";
 
 class AuthController {
@@ -46,9 +46,16 @@ class AuthController {
     });
   });
 
-  public logoutUser = catchAsyncError(
-    async (req: Request, res: Response) => {},
-  );
+  public logoutUser = catchAsyncError(async (req: Request, res: Response) => {
+    clearCookies(res, "accessToken");
+    clearCookies(res, "refreshToken");
+
+    // TODO: logger.info("User logged out", { data: req.user });
+
+    res.status(200).json({
+      message: "SUCCESS",
+    });
+  });
 
   public getMe = catchAsyncError(async (req: Request, res: Response) => {});
 
