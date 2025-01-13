@@ -1,15 +1,18 @@
 import { NextFunction, Request } from "express";
 import { catchAsyncError } from "../../utils/catch-async-error";
 import { AppError } from "../../utils/app-errors";
-import JWT, { CustomJwtPayload } from "../../utils/jwt";
+import TokenService, {
+  CustomJwtPayload,
+} from "../../utils/services/token.service";
 import UserRepository from "../user/user.repository";
+import { UserDTO } from "../user/user.dto";
 
 class AuthMiddleware {
-  private jwt: JWT;
+  private tokenService: TokenService;
   private userRepository: UserRepository;
 
-  constructor(jwt: JWT, userRepository: UserRepository) {
-    this.jwt = jwt;
+  constructor(tokenService: TokenService, userRepository: UserRepository) {
+    this.tokenService = tokenService;
     this.userRepository = userRepository;
   }
 
@@ -26,7 +29,17 @@ class AuthMiddleware {
         throw new AppError(401, "This user doesn't exists");
       }
 
-      req.user = currentUser.toDTO();
+      const authenticatedUser: UserDTO = {
+        id: currentUser.id,
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        email: currentUser.email,
+        avatarUrl: currentUser.avatarUrl,
+        isVerified: currentUser.isVerified,
+      };
+
+      req.user = authenticatedUser;
+
       next();
     },
   );
@@ -49,7 +62,7 @@ class AuthMiddleware {
   }
 
   private verifyToken(token: string) {
-    return this.jwt.verifyToken<CustomJwtPayload>(token);
+    return this.tokenService.verifyToken<CustomJwtPayload>(token);
   }
 }
 

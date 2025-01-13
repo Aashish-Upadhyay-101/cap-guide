@@ -22,8 +22,8 @@ export interface UserDTO {
   firstName: string;
   lastName: string;
   email: string;
-  avatarUrl?: string;
-  isVerified?: boolean;
+  avatarUrl?: string | null;
+  isVerified?: boolean | null;
 }
 
 export type LoginUserDTO = z.infer<typeof ZLoginUserSchema>;

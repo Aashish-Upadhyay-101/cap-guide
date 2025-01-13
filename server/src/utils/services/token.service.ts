@@ -1,11 +1,11 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
-import { TokenError } from "./app-errors";
+import { TokenError } from "../app-errors";
 
 export interface CustomJwtPayload {
   userId: string;
 }
 
-class JWT {
+class TokenService {
   private readonly secretKey: string;
   private readonly issuer: string;
 
@@ -44,4 +44,4 @@ class JWT {
   }
 }
 
-export default JWT;
+export default TokenService;

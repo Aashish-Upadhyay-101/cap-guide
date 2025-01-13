@@ -1,8 +1,8 @@
 import { TokenPair } from "../../types";
 import { AppError } from "../../utils/app-errors";
-import JWT from "../../utils/jwt";
+import TokenService from "../../utils/services/token.service";
+import PasswordService from "../../utils/services/password.service";
 import { LoginUserDTO, RegisterUserDTO, UserDTO } from "../user/user.dto";
-import User from "../user/user.entity";
 import UserRepository from "../user/user.repository";
 
 // TODO: updated_at column is showing incorrect values
@@ -10,36 +10,45 @@ import UserRepository from "../user/user.repository";
 
 class AuthService {
   private userRepository: UserRepository;
-  private jwt: JWT;
+  private tokenService: TokenService;
+  private passwordService: PasswordService;
 
-  constructor(userRepository: UserRepository, jwt: JWT) {
+  constructor(
+    userRepository: UserRepository,
+    tokenService: TokenService,
+    passwordService: PasswordService,
+  ) {
     this.userRepository = userRepository;
-    this.jwt = jwt;
+    this.tokenService = tokenService;
+    this.passwordService = passwordService;
   }
 
-  public async registerUser(
-    dto: RegisterUserDTO,
-  ): Promise<UserDTO & TokenPair> {
+  public async registerUser(dto: RegisterUserDTO): Promise<TokenPair> {
     const existingUser = await this.userRepository.getUserByEmail(dto.email);
     if (existingUser) {
       throw new AppError(400, "User with this email already exists");
     }
 
-    const newUser = new User(dto.firstName, dto.lastName, dto.email);
-    newUser.setPassword(dto.password);
+    const passwordHash = this.passwordService.hashPassword(dto.password);
+    const newUser = {
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      email: dto.email,
+      passwordHash: passwordHash,
+    };
 
     const user = await this.userRepository.createUser(newUser);
 
     const tokenPair: TokenPair = {
-      accessToken: this.jwt.generateToken(
-        { userId: user.getId() },
+      accessToken: this.tokenService.generateToken(
+        { userId: user.id },
         {
           expiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES),
         },
       ),
-      refreshToken: this.jwt.generateToken(
+      refreshToken: this.tokenService.generateToken(
         {
-          userId: user.getId(),
+          userId: user.id,
         },
         {
           expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES,
@@ -47,33 +56,34 @@ class AuthService {
       ),
     };
 
-    return {
-      ...user.toDTO(),
-      ...tokenPair,
-    };
+    return tokenPair;
   }
 
-  public async loginUser(dto: LoginUserDTO): Promise<UserDTO & TokenPair> {
+  public async loginUser(dto: LoginUserDTO): Promise<TokenPair> {
     const user = await this.userRepository.getUserByEmail(dto.email);
     if (!user) {
       throw new AppError(401, "User with this email doesn't exists");
     }
 
-    const validPassword = user.verifyPassword(dto.password);
+    const passwordHash = user.passwordHash as string;
+    const validPassword = this.passwordService.verifyPassword(
+      passwordHash,
+      dto.password,
+    );
     if (!validPassword) {
       throw new AppError(401, "Incorrect password");
     }
 
     const tokenPair: TokenPair = {
-      accessToken: this.jwt.generateToken(
-        { userId: user.getId() },
+      accessToken: this.tokenService.generateToken(
+        { userId: user.id },
         {
           expiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES),
         },
       ),
-      refreshToken: this.jwt.generateToken(
+      refreshToken: this.tokenService.generateToken(
         {
-          userId: user.getId(),
+          userId: user.id,
         },
         {
           expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES,
@@ -81,10 +91,7 @@ class AuthService {
       ),
     };
 
-    return {
-      ...user.toDTO(),
-      ...tokenPair,
-    };
+    return tokenPair;
   }
 }
 

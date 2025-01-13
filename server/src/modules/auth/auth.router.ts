@@ -1,4 +1,5 @@
-import JWT from "../../utils/jwt";
+import TokenService from "../../utils/services/token.service";
+import PasswordService from "../../utils/services/password.service";
 import BaseRouter from "../core/base.router";
 import UserRepository from "../user/user.repository";
 import AuthController from "./auth.controller";
@@ -9,17 +10,30 @@ class AuthRouter extends BaseRouter {
   private authController: AuthController;
   private authService: AuthService;
   private userRepository: UserRepository;
-  private jwt: JWT;
+  private tokenService: TokenService;
+  private passwordService: PasswordService;
   private authMiddleware: AuthMiddleware;
 
   constructor() {
     super();
 
     this.userRepository = new UserRepository();
-    this.jwt = new JWT(process.env.JWT_SECRET_KEY!, process.env.APP!);
-    this.authService = new AuthService(this.userRepository, this.jwt);
+
+    this.tokenService = new TokenService(
+      process.env.JWT_SECRET_KEY!,
+      process.env.APP!,
+    );
+    this.passwordService = new PasswordService();
+    this.authService = new AuthService(
+      this.userRepository,
+      this.tokenService,
+      this.passwordService,
+    );
     this.authController = new AuthController(this.authService);
-    this.authMiddleware = new AuthMiddleware(this.jwt, this.userRepository);
+    this.authMiddleware = new AuthMiddleware(
+      this.tokenService,
+      this.userRepository,
+    );
 
     this.setRoutes((router) => {
       router.post("/register", this.authController.registerUser);

@@ -16,16 +16,16 @@ class AuthController {
     const data = req.body;
     const registerUserDTO = ZRegisterUserSchema.parse(data);
 
-    const userWithToken = await this.authService.registerUser(registerUserDTO);
+    const tokenPair = await this.authService.registerUser(registerUserDTO);
 
-    setCookies(res, "accessToken", userWithToken.accessToken);
-    setCookies(res, "refreshToken", userWithToken.refreshToken);
+    setCookies(res, "accessToken", tokenPair.accessToken);
+    setCookies(res, "refreshToken", tokenPair.refreshToken);
 
-    logger.info("User registered successfully", { data: userWithToken });
+    logger.info("User registered successfully", { data: registerUserDTO });
 
     res.status(201).json({
       message: "SUCCESS",
-      data: userWithToken,
+      data: tokenPair,
     });
   });
 
@@ -33,16 +33,16 @@ class AuthController {
     const data = req.body;
     const loginUserDTO = ZLoginUserSchema.parse(data);
 
-    const userWithToken = await this.authService.loginUser(loginUserDTO);
+    const tokenPair = await this.authService.loginUser(loginUserDTO);
 
-    setCookies(res, "accessToken", userWithToken.accessToken);
-    setCookies(res, "refreshToken", userWithToken.refreshToken);
+    setCookies(res, "accessToken", tokenPair.accessToken);
+    setCookies(res, "refreshToken", tokenPair.refreshToken);
 
-    logger.info("User logged in successfully", { data: userWithToken });
+    logger.info("User logged in successfully", { data: loginUserDTO.email });
 
     res.status(200).json({
       message: "SUCCESS",
-      data: userWithToken,
+      data: tokenPair,
     });
   });
 
@@ -50,7 +50,7 @@ class AuthController {
     clearCookies(res, "accessToken");
     clearCookies(res, "refreshToken");
 
-    TODO: logger.info("User logged out", { data: req?.user });
+    logger.info("User logged out", { data: req?.user });
 
     res.status(200).json({
       message: "SUCCESS",

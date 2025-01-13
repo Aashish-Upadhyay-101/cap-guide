@@ -7,7 +7,7 @@ import {
   uuid,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
-import { relations, sql } from "drizzle-orm";
+import { InferInsertModel, relations, sql } from "drizzle-orm";
 import accounts from "./account.schema";
 import workspaceUsers from "./workspaceUser.schema";
 
@@ -37,3 +37,5 @@ export const usersRelations = relations(users, ({ many }) => ({
 }));
 
 export default users;
+
+export type User = InferInsertModel<typeof users>;
