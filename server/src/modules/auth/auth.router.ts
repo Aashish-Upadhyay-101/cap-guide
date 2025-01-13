@@ -21,6 +21,12 @@ class AuthRouter extends BaseRouter {
     this.setRoutes((router) => {
       router.post("/register", this.authController.registerUser);
       router.post("/login", this.authController.loginUser);
+      router.post("/logout", this.authController.loginUser);
+      router.get("/me", this.authController.getMe);
+      router.post("/token-refresh", this.authController.tokenRefresh);
+      router.post("/reset-password", this.authController.resetPassword);
+      router.get("/verify-user", this.authController.verifyUser);
+      router.get("/social", this.authController.socialLogin);
     });
   }
 }

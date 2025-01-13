@@ -45,6 +45,28 @@ class AuthController {
       data: userWithToken,
     });
   });
+
+  public logoutUser = catchAsyncError(
+    async (req: Request, res: Response) => {},
+  );
+
+  public getMe = catchAsyncError(async (req: Request, res: Response) => {});
+
+  public resetPassword = catchAsyncError(
+    async (req: Request, res: Response) => {},
+  );
+
+  public tokenRefresh = catchAsyncError(
+    async (req: Request, res: Response) => {},
+  );
+
+  public verifyUser = catchAsyncError(
+    async (req: Request, res: Response) => {},
+  );
+
+  public socialLogin = catchAsyncError(
+    async (req: Request, res: Response) => {},
+  );
 }
 
 export default AuthController;
