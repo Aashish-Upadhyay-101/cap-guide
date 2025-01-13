@@ -1,6 +1,10 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 import { TokenError } from "./app-errors";
 
+export interface CustomJwtPayload {
+  userId: string;
+}
+
 class JWT {
   private readonly secretKey: string;
   private readonly issuer: string;
@@ -26,6 +30,9 @@ class JWT {
       const decoded = jwt.verify(token, this.secretKey, {
         issuer: this.issuer,
       });
+
+      console.log({ decoded });
+
       return decoded as T;
     } catch (error) {
       throw new TokenError(error.message);

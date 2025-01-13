@@ -34,7 +34,7 @@ class AuthService {
       accessToken: this.jwt.generateToken(
         { userId: user.getId() },
         {
-          expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES,
+          expiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES),
         },
       ),
       refreshToken: this.jwt.generateToken(
@@ -68,7 +68,7 @@ class AuthService {
       accessToken: this.jwt.generateToken(
         { userId: user.getId() },
         {
-          expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES,
+          expiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES),
         },
       ),
       refreshToken: this.jwt.generateToken(

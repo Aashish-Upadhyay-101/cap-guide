@@ -50,14 +50,19 @@ class AuthController {
     clearCookies(res, "accessToken");
     clearCookies(res, "refreshToken");
 
-    // TODO: logger.info("User logged out", { data: req.user });
+    TODO: logger.info("User logged out", { data: req?.user });
 
     res.status(200).json({
       message: "SUCCESS",
     });
   });
 
-  public getMe = catchAsyncError(async (req: Request, res: Response) => {});
+  public getMe = catchAsyncError(async (req: Request, res: Response) => {
+    res.status(200).json({
+      message: "SUCCESS",
+      data: req?.user,
+    });
+  });
 
   public resetPassword = catchAsyncError(
     async (req: Request, res: Response) => {},

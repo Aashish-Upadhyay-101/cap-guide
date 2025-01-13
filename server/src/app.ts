@@ -6,8 +6,17 @@ dotenv.config();
 import { httpContextMiddleware } from "./middlewares/httpContext";
 import AuthRouter from "./modules/auth/auth.router";
 import globalErrorHandler from "./middlewares/globalErrorHandler";
+import { UserDTO } from "./modules/user/user.dto";
 
 const app: Express = express();
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: UserDTO;
+    }
+  }
+}
 
 // middlewares
 app.use(express.json());
