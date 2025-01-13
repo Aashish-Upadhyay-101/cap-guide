@@ -40,9 +40,9 @@ class UserRepository implements IUserRepository {
 
     if (!existingUser) return null;
 
-    const { id, firstName, lastName, email: mail } = existingUser;
+    const { id, firstName, lastName, email: mail, passwordHash } = existingUser;
 
-    return new User(firstName, lastName, mail, id);
+    return new User(firstName, lastName, mail, id, passwordHash as string);
   }
 }
 

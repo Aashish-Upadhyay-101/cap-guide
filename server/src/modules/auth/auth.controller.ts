@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import AuthService from "./auth.service";
-import { ZRegisterUserSchema } from "../user/user.dto";
+import { ZLoginUserSchema, ZRegisterUserSchema } from "../user/user.dto";
 import { catchAsyncError } from "../../utils/catch-async-error";
 import { setCookies } from "../../utils/cookie";
 import logger from "../../config/logger";
@@ -24,6 +24,23 @@ class AuthController {
     logger.info("User registered successfully", { data: userWithToken });
 
     res.status(201).json({
+      message: "SUCCESS",
+      data: userWithToken,
+    });
+  });
+
+  public loginUser = catchAsyncError(async (req: Request, res: Response) => {
+    const data = req.body;
+    const loginUserDTO = ZLoginUserSchema.parse(data);
+
+    const userWithToken = await this.authService.loginUser(loginUserDTO);
+
+    setCookies(res, "accessToken", userWithToken.accessToken);
+    setCookies(res, "refreshToken", userWithToken.refreshToken);
+
+    logger.info("User logged in successfully", { data: userWithToken });
+
+    res.status(200).json({
       message: "SUCCESS",
       data: userWithToken,
     });

@@ -57,7 +57,10 @@ class User {
   }
 
   public verifyPassword(password: string): boolean {
-    const passwordSalt = this.passwordHash?.split("-")[0] as string;
+    const passwordWithSalt = this.passwordHash?.split("-") as string[];
+    const passwordSalt = passwordWithSalt[0] as string;
+    const originalPassword = passwordWithSalt[1] as string;
+
     const passwordHash = pbkdf2Sync(
       password,
       passwordSalt,
@@ -66,10 +69,10 @@ class User {
       "sha512",
     ).toString("hex");
 
-    return this.passwordHash === passwordHash;
+    return originalPassword === passwordHash;
   }
 
-  public toDTO(): UserDTO {
+  public toDTO() {
     return {
       id: this.id,
       firstName: this.firstName,
