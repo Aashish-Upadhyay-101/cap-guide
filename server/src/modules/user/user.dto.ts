@@ -18,12 +18,12 @@ export const ZRegisterUserSchema = z
   });
 
 export interface UserDTO {
-  id?: string;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
-  avatarUrl?: string | null;
-  isVerified?: boolean | null;
+  avatarUrl?: string;
+  isVerified?: boolean;
 }
 
 export type LoginUserDTO = z.infer<typeof ZLoginUserSchema>;

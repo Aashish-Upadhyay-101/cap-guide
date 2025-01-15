@@ -34,8 +34,8 @@ class AuthMiddleware {
         firstName: currentUser.firstName,
         lastName: currentUser.lastName,
         email: currentUser.email,
-        avatarUrl: currentUser.avatarUrl,
-        isVerified: currentUser.isVerified,
+        avatarUrl: currentUser.avatarUrl!,
+        isVerified: currentUser.isVerified!,
       };
 
       req.user = authenticatedUser;

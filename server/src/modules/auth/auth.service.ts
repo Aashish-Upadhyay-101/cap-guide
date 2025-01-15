@@ -10,6 +10,8 @@ import UserRepository from "../user/user.repository";
 // TODO: updated_at column is showing incorrect values
 // add custom trigger in sql migration at last
 
+// TODO: Workspace feature
+
 class AuthService {
   private userRepository: UserRepository;
   private tokenService: TokenService;
@@ -70,10 +72,10 @@ class AuthService {
 
     const tokenPair: TokenPair = {
       accessToken: this.tokenService.generateAccessToken({
-        userId: user.id as string,
+        userId: user.id,
       }),
       refreshToken: this.tokenService.generateRefreshToken({
-        userId: user.id as string,
+        userId: user.id,
       }),
     };
 

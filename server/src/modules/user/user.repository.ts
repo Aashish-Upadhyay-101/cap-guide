@@ -1,15 +1,18 @@
 import { eq } from "drizzle-orm";
 import db from "../../config/db";
-import users, { User } from "../../database/schema/user.schema";
+import users, {
+  UserInsert,
+  UserSelect,
+} from "../../database/schema/user.schema";
 
 interface IUserRepository {
-  createUser(user: User): Promise<User>;
-  getUserByEmail(email: string): Promise<User | null>;
-  getUserById(id: string): Promise<User | null>;
+  createUser(user: UserInsert): Promise<UserInsert>;
+  getUserByEmail(email: string): Promise<UserSelect | null>;
+  getUserById(id: string): Promise<UserSelect | null>;
 }
 
 class UserRepository implements IUserRepository {
-  public async createUser(newUser: User): Promise<User> {
+  public async createUser(newUser: UserInsert): Promise<UserInsert> {
     const user = await db
       .insert(users)
       .values({
@@ -24,7 +27,7 @@ class UserRepository implements IUserRepository {
     return user;
   }
 
-  public async getUserByEmail(email: string): Promise<User> {
+  public async getUserByEmail(email: string): Promise<UserSelect> {
     const user = await db
       .select()
       .from(users)
@@ -35,7 +38,7 @@ class UserRepository implements IUserRepository {
     return user;
   }
 
-  public async getUserById(id: string): Promise<User> {
+  public async getUserById(id: string): Promise<UserSelect> {
     const user = await db
       .select()
       .from(users)
