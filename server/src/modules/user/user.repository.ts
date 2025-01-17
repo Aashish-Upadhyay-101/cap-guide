@@ -6,7 +6,7 @@ import users, {
 } from "../../database/schema/user.schema";
 
 interface IUserRepository {
-  createUser(user: UserInsert): Promise<UserInsert>;
+  createUser(newUser: UserInsert): Promise<UserInsert>;
   getUserByEmail(email: string): Promise<UserSelect | null>;
   getUserById(id: string): Promise<UserSelect | null>;
 }
