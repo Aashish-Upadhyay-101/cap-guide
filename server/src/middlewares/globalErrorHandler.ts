@@ -62,6 +62,10 @@ const globalErrorHandler = (
     const errMessageToArray = err.constraint_name?.split("_") as string[];
     const message = `${errMessageToArray[0]} ${errMessageToArray[1]} should be ${errMessageToArray[2]}`;
 
+    logger.error("DATABASE_ERROR", {
+      messages: [err.message],
+    });
+
     statusCode = 500;
     errorResponse = {
       success: false,
