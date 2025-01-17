@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { catchAsyncError } from "../../utils/catch-async-error";
 import WorkspaceService from "./workspace.service";
-import { ZCreateWorkspaceSchema } from "./workspace.dto";
+import {
+  CreateWorkspaceUserDTO,
+  ZCreateWorkspaceSchema,
+} from "./workspace.dto";
 import logger from "../../config/logger";
 
 class WorkspaceController {
@@ -20,11 +23,26 @@ class WorkspaceController {
         createWorkspaceDTO,
       );
 
-      logger.info("Workspace created successfully", { data: workspace });
+      const createWorkspaceUserDTO: CreateWorkspaceUserDTO = {
+        userId: req.user?.id as string,
+        workspaceId: workspace.id,
+        role: "OWNER",
+      };
+
+      const workspaceUser = await this.workspaceService.createWorkspaceUser(
+        createWorkspaceUserDTO,
+      );
+
+      const responseData = {
+        ...workspace,
+        createdBy: workspaceUser.userId,
+      };
+
+      logger.info("Workspace created successfully", { data: responseData });
 
       res.status(201).json({
         message: "SUCCESS",
-        data: workspace,
+        data: responseData,
       });
     },
   );

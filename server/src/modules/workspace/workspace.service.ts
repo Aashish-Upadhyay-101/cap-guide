@@ -1,4 +1,9 @@
-import { CreateWorkspaceDTO, WorkspaceDTO } from "./workspace.dto";
+import { WorkspaceUserSelect } from "../../database/schema/workspaceUser.schema";
+import {
+  CreateWorkspaceDTO,
+  CreateWorkspaceUserDTO,
+  WorkspaceDTO,
+} from "./workspace.dto";
 import WorkspaceRepository from "./workspace.repository";
 
 class WorkspaceService {
@@ -9,15 +14,7 @@ class WorkspaceService {
   }
 
   public async createWorkspace(dto: CreateWorkspaceDTO): Promise<WorkspaceDTO> {
-    // create workspace
-
-    // get current user
-
-    // create workspaceUser table put current user inside this new team
-
-    // return the current team
-
-    const workspace = await this.workspaceRepository.createWorkspace(dto);
+    const workspace = await this.workspaceRepository.createWorkspace(dto.name);
 
     const workspaceDTO: WorkspaceDTO = {
       id: workspace.id as string,
@@ -25,6 +22,16 @@ class WorkspaceService {
     };
 
     return workspaceDTO;
+  }
+
+  public async createWorkspaceUser(
+    dto: CreateWorkspaceUserDTO,
+  ): Promise<WorkspaceUserSelect> {
+    const workspaceUser = (await this.workspaceRepository.createWorkspaceUser(
+      dto,
+    )) as WorkspaceUserSelect;
+
+    return workspaceUser;
   }
 
   public getWorkspace() {}
