@@ -28,3 +28,5 @@ class WorkspaceRepository implements IWorkspaceRepository {
   public updateWorkspace(): void {}
   public deleteWorkspace(): void {}
 }
+
+export default WorkspaceRepository;
