@@ -1,3 +1,5 @@
+import TokenService from "../../utils/services/token.service";
+import AuthMiddleware from "../auth/auth.middleware";
 import BaseRouter from "../core/base.router";
 import WorkspaceController from "./workspace.controller";
 import WorkspaceRepository from "./workspace.repository";
@@ -7,6 +9,7 @@ class WorkspaceRouter extends BaseRouter {
   private workspaceRepository: WorkspaceRepository;
   private workspaceService: WorkspaceService;
   private workspaceController: WorkspaceController;
+  private authMiddleware: AuthMiddleware;
 
   constructor() {
     super();
@@ -14,6 +17,9 @@ class WorkspaceRouter extends BaseRouter {
     this.workspaceRepository = new WorkspaceRepository();
     this.workspaceService = new WorkspaceService(this.workspaceRepository);
     this.workspaceController = new WorkspaceController(this.workspaceService);
+    this.authMiddleware = new AuthMiddleware();
+
+    this.use([this.authMiddleware.protectRoute]);
 
     this.setRoutes((router) => {
       router.post("/", this.workspaceController.createWorkspace);

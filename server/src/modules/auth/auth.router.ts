@@ -30,10 +30,7 @@ class AuthRouter extends BaseRouter {
       this.passwordService,
     );
     this.authController = new AuthController(this.authService);
-    this.authMiddleware = new AuthMiddleware(
-      this.tokenService,
-      this.userRepository,
-    );
+    this.authMiddleware = new AuthMiddleware();
 
     this.setRoutes((router) => {
       router.post("/register", this.authController.registerUser);

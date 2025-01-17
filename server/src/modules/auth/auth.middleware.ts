@@ -11,9 +11,12 @@ class AuthMiddleware {
   private tokenService: TokenService;
   private userRepository: UserRepository;
 
-  constructor(tokenService: TokenService, userRepository: UserRepository) {
-    this.tokenService = tokenService;
-    this.userRepository = userRepository;
+  constructor() {
+    this.tokenService = new TokenService(
+      process.env.JWT_SECRET_KEY!,
+      process.env.APP!,
+    );
+    this.userRepository = new UserRepository();
   }
 
   public protectRoute = catchAsyncError(
