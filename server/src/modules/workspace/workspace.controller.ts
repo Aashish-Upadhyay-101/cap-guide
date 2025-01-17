@@ -41,3 +41,5 @@ class WorkspaceController {
 
   public updateWorkspaceMemberRole() {}
 }
+
+export default WorkspaceController;
