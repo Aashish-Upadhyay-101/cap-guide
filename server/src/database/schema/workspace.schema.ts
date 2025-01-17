@@ -1,4 +1,9 @@
-import { relations, sql } from "drizzle-orm";
+import {
+  InferInsertModel,
+  InferSelectModel,
+  relations,
+  sql,
+} from "drizzle-orm";
 import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import workspaceUsers from "./workspaceUser.schema";
 
@@ -20,3 +25,6 @@ export const workspacesRelations = relations(workspaces, ({ many }) => ({
 }));
 
 export default workspaces;
+
+export type WorkspaceInsert = InferInsertModel<typeof workspaces>;
+export type WorkspaceSelect = InferSelectModel<typeof workspaces>;
