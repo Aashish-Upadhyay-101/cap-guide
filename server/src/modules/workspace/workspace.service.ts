@@ -30,3 +30,5 @@ class WorkspaceService {
 
   public updateWorkspaceMemberRole() {}
 }
+
+export default WorkspaceService;
