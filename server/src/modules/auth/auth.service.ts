@@ -10,7 +10,8 @@ import UserRepository from "../user/user.repository";
 // TODO: updated_at column is showing incorrect values
 // add custom trigger in sql migration at last
 
-// TODO: Workspace feature
+// TODO: Workspace feature -> get workspace by id
+// Main frontend React application starts -> core feature implementation
 
 class AuthService {
   private userRepository: UserRepository;

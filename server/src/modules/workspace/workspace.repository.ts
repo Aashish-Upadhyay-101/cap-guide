@@ -1,6 +1,8 @@
+import { eq } from "drizzle-orm";
 import db from "../../config/db";
 import workspaces, {
   WorkspaceInsert,
+  WorkspaceSelect,
 } from "../../database/schema/workspace.schema";
 import workspaceUsers, {
   WorkspaceUserInsert,
@@ -9,7 +11,7 @@ import { CreateWorkspaceUserDTO } from "./workspace.dto";
 
 interface IWorkspaceRepository {
   createWorkspace(name: string): Promise<WorkspaceInsert>;
-  getWorkspaceById(): void;
+  getWorkspaceById(id: string): Promise<WorkspaceSelect>;
   updateWorkspace(): void;
   deleteWorkspace(): void;
   createWorkspaceUser(
@@ -30,7 +32,17 @@ class WorkspaceRepository implements IWorkspaceRepository {
     return workspace;
   }
 
-  public getWorkspaceById(): void {}
+  public async getWorkspaceById(id: string): Promise<WorkspaceSelect> {
+    const workspace = await db
+      .select()
+      .from(workspaces)
+      .where(eq(workspaces.id, id))
+      .limit(1)
+      .then((row) => row[0]);
+
+    return workspace;
+  }
+
   public updateWorkspace(): void {}
   public deleteWorkspace(): void {}
 
