@@ -22,6 +22,7 @@ class WorkspaceRouter extends BaseRouter {
     this.use([this.authMiddleware.protectRoute]);
 
     this.setRoutes((router) => {
+      router.get("/", this.workspaceController.getAllUserWorkspaces);
       router.post("/", this.workspaceController.createWorkspace);
       router.get("/:id", this.workspaceController.getWorkspace);
       router.patch("/:id", this.workspaceController.updateWorkspace);

@@ -35,9 +35,30 @@ class WorkspaceService {
     return workspaceUser;
   }
 
-  public async getWorkspace(id: string): Promise<WorkspaceSelect> {
+  public async getWorkspace(id: string): Promise<WorkspaceDTO> {
     const workspace = await this.workspaceRepository.getWorkspaceById(id);
-    return workspace;
+
+    const workspaceDTO: WorkspaceDTO = {
+      id: workspace.id,
+      name: workspace.name,
+    };
+
+    return workspaceDTO;
+  }
+
+  public async getAllUserWorkspaces(userId: string): Promise<WorkspaceDTO[]> {
+    const userWorkspaces = await this.workspaceRepository.getAllUserWorkspaces(
+      userId,
+    );
+
+    const userWorkspacesDTO: WorkspaceDTO[] = userWorkspaces.map(
+      (userWorkspace) => ({
+        id: userWorkspace.id,
+        name: userWorkspace.name,
+      }),
+    );
+
+    return userWorkspacesDTO;
   }
 
   public updateWorkspace() {}

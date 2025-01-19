@@ -63,6 +63,23 @@ class WorkspaceController {
     });
   });
 
+  public getAllUserWorkspaces = catchAsyncError(
+    async (req: Request, res: Response) => {
+      const userId = req.user?.id as string;
+
+      const userWorkspaces = this.workspaceService.getAllUserWorkspaces(userId);
+
+      logger.info("User workspaces fetched successfully", {
+        data: userWorkspaces,
+      });
+
+      res.status(200).json({
+        message: "SUCCESS",
+        data: userWorkspaces,
+      });
+    },
+  );
+
   public updateWorkspace() {}
 
   public deleteWorkspace() {}

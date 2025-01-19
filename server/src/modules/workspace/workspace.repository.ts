@@ -8,10 +8,12 @@ import workspaceUsers, {
   WorkspaceUserInsert,
 } from "../../database/schema/workspaceUser.schema";
 import { CreateWorkspaceUserDTO } from "./workspace.dto";
+import { workspace } from "../../database/schema";
 
 interface IWorkspaceRepository {
   createWorkspace(name: string): Promise<WorkspaceInsert>;
   getWorkspaceById(id: string): Promise<WorkspaceSelect>;
+  getAllUserWorkspaces(userId: string): Promise<WorkspaceSelect[]>;
   updateWorkspace(): void;
   deleteWorkspace(): void;
   createWorkspaceUser(
@@ -41,6 +43,23 @@ class WorkspaceRepository implements IWorkspaceRepository {
       .then((row) => row[0]);
 
     return workspace;
+  }
+
+  public async getAllUserWorkspaces(
+    userId: string,
+  ): Promise<WorkspaceSelect[]> {
+    const userWorkspaces = (await db
+      .select({
+        id: workspaces.id,
+        name: workspaces.name,
+      })
+      .from(workspaceUsers)
+      .leftJoin(
+        workspaces,
+        eq(workspaceUsers.workspaceId, workspaces.id),
+      )) as WorkspaceSelect[];
+
+    return userWorkspaces;
   }
 
   public updateWorkspace(): void {}
