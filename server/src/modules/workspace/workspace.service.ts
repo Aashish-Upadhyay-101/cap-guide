@@ -1,3 +1,4 @@
+import { WorkspaceSelect } from "../../database/schema/workspace.schema";
 import { WorkspaceUserSelect } from "../../database/schema/workspaceUser.schema";
 import {
   CreateWorkspaceDTO,
@@ -34,7 +35,10 @@ class WorkspaceService {
     return workspaceUser;
   }
 
-  public getWorkspace() {}
+  public async getWorkspace(id: string): Promise<WorkspaceSelect> {
+    const workspace = await this.workspaceRepository.getWorkspaceById(id);
+    return workspace;
+  }
 
   public updateWorkspace() {}
 

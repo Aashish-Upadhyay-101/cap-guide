@@ -4,6 +4,7 @@ import WorkspaceService from "./workspace.service";
 import {
   CreateWorkspaceUserDTO,
   ZCreateWorkspaceSchema,
+  ZGetWorkspaceSchema,
 } from "./workspace.dto";
 import logger from "../../config/logger";
 
@@ -47,7 +48,20 @@ class WorkspaceController {
     },
   );
 
-  public getWorkspace() {}
+  public getWorkspace = catchAsyncError(async (req: Request, res: Response) => {
+    const data = req.body;
+
+    const getWorkspaceDTO = ZGetWorkspaceSchema.parse(data);
+
+    const workspace = this.workspaceService.getWorkspace(getWorkspaceDTO.id);
+
+    logger.info("Workspace fetched successfully", { data: workspace });
+
+    res.status(200).json({
+      message: "SUCCESS",
+      data: workspace,
+    });
+  });
 
   public updateWorkspace() {}
 
