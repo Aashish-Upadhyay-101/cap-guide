@@ -54,6 +54,7 @@ class WorkspaceRepository implements IWorkspaceRepository {
         name: workspaces.name,
       })
       .from(workspaceUsers)
+      .where(eq(workspaceUsers.userId, userId))
       .leftJoin(
         workspaces,
         eq(workspaceUsers.workspaceId, workspaces.id),

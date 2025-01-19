@@ -49,11 +49,13 @@ class WorkspaceController {
   );
 
   public getWorkspace = catchAsyncError(async (req: Request, res: Response) => {
-    const data = req.body;
+    const data = req.params;
 
     const getWorkspaceDTO = ZGetWorkspaceSchema.parse(data);
 
-    const workspace = this.workspaceService.getWorkspace(getWorkspaceDTO.id);
+    const workspace = await this.workspaceService.getWorkspace(
+      getWorkspaceDTO.id,
+    );
 
     logger.info("Workspace fetched successfully", { data: workspace });
 
@@ -67,7 +69,9 @@ class WorkspaceController {
     async (req: Request, res: Response) => {
       const userId = req.user?.id as string;
 
-      const userWorkspaces = this.workspaceService.getAllUserWorkspaces(userId);
+      const userWorkspaces = await this.workspaceService.getAllUserWorkspaces(
+        userId,
+      );
 
       logger.info("User workspaces fetched successfully", {
         data: userWorkspaces,
